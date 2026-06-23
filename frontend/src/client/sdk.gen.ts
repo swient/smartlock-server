@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, SmartlocksInitiateBindData, SmartlocksInitiateBindResponse, SmartlocksUnbindDeviceData, SmartlocksUnbindDeviceResponse, SmartlocksGetLockLogsData, SmartlocksGetLockLogsResponse, SmartlocksSendUnlockCommandData, SmartlocksSendUnlockCommandResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class ItemsService {
     /**
@@ -228,6 +228,90 @@ export class PrivateService {
             url: '/api/v1/private/users/',
             body: data.requestBody,
             mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class SmartlocksService {
+    /**
+     * Initiate Bind
+     * @param data The data for the request.
+     * @param data.deviceUuid
+     * @param data.bindingKeyHex
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static initiateBind(data: SmartlocksInitiateBindData): CancelablePromise<SmartlocksInitiateBindResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/locks/initiate-bind',
+            query: {
+                device_uuid: data.deviceUuid,
+                binding_key_hex: data.bindingKeyHex
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Unbind Device
+     * @param data The data for the request.
+     * @param data.deviceUuid
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static unbindDevice(data: SmartlocksUnbindDeviceData): CancelablePromise<SmartlocksUnbindDeviceResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/locks/{device_uuid}/unbind',
+            path: {
+                device_uuid: data.deviceUuid
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Get Lock Logs
+     * @param data The data for the request.
+     * @param data.deviceUuid
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static getLockLogs(data: SmartlocksGetLockLogsData): CancelablePromise<SmartlocksGetLockLogsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/locks/{device_uuid}/logs',
+            path: {
+                device_uuid: data.deviceUuid
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Send Unlock Command
+     * @param data The data for the request.
+     * @param data.deviceUuid
+     * @returns unknown Successful Response
+     * @throws ApiError
+     */
+    public static sendUnlockCommand(data: SmartlocksSendUnlockCommandData): CancelablePromise<SmartlocksSendUnlockCommandResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/locks/{device_uuid}/unlock',
+            path: {
+                device_uuid: data.deviceUuid
+            },
             errors: {
                 422: 'Validation Error'
             }

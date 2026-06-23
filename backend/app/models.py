@@ -1,13 +1,38 @@
 import uuid
+from typing import List, Optional
 from datetime import datetime, timezone
 
 from pydantic import EmailStr
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, BigInteger
 from sqlmodel import Field, Relationship, SQLModel
 
 
 def get_datetime_utc() -> datetime:
     return datetime.now(timezone.utc)
+
+
+class SmartLock(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    device_uuid: str = Field(unique=True, index=True)
+    last_transaction_id: Optional[str] = None
+    binding_key: str
+    master_key: Optional[str] = Field(default=None)
+    temp_private_key: Optional[str] = None
+    is_bound: bool = Field(default=False)
+    user_id: Optional[uuid.UUID] = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
+    user: Optional["User"] = Relationship(back_populates="smart_locks")
+    logs: List["AuthLog"] = Relationship(back_populates="smart_lock", cascade_delete=True)
+
+
+class AuthLog(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    timestamp_ms: int = Field(sa_type=BigInteger, index=True)
+    authenticated: bool
+    auth_type: str
+    confidence: float
+    image_b64: str
+    smart_lock_id: int = Field(foreign_key="smartlock.id", ondelete="CASCADE")
+    smart_lock: "SmartLock" = Relationship(back_populates="logs")
 
 
 # Shared properties
@@ -54,6 +79,7 @@ class User(UserBase, table=True):
         sa_type=DateTime(timezone=True),  # type: ignore
     )
     items: list["Item"] = Relationship(back_populates="owner", cascade_delete=True)
+    smart_locks: List["SmartLock"] = Relationship(back_populates="user")
 
 
 # Properties to return via API, id is always required
@@ -90,9 +116,7 @@ class Item(ItemBase, table=True):
         default_factory=get_datetime_utc,
         sa_type=DateTime(timezone=True),  # type: ignore
     )
-    owner_id: uuid.UUID = Field(
-        foreign_key="user.id", nullable=False, ondelete="CASCADE"
-    )
+    owner_id: uuid.UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
     owner: User | None = Relationship(back_populates="items")
 
 

@@ -173,6 +173,39 @@ export type PrivateCreateUserData = {
 
 export type PrivateCreateUserResponse = (UserPublic);
 
+export type SmartlocksInitiateBindData = {
+    bindingKeyHex: string;
+    deviceUuid: string;
+};
+
+export type SmartlocksInitiateBindResponse = ({
+    [key: string]: unknown;
+});
+
+export type SmartlocksUnbindDeviceData = {
+    deviceUuid: string;
+};
+
+export type SmartlocksUnbindDeviceResponse = ({
+    [key: string]: unknown;
+});
+
+export type SmartlocksGetLockLogsData = {
+    deviceUuid: string;
+};
+
+export type SmartlocksGetLockLogsResponse = (Array<{
+    [key: string]: unknown;
+}>);
+
+export type SmartlocksSendUnlockCommandData = {
+    deviceUuid: string;
+};
+
+export type SmartlocksSendUnlockCommandResponse = ({
+    [key: string]: unknown;
+});
+
 export type UsersReadUsersData = {
     limit?: number;
     skip?: number;

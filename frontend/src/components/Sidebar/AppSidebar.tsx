@@ -1,28 +1,28 @@
-import { Briefcase, Home, Users } from "lucide-react"
+import { Briefcase, Home, Users } from "lucide-react";
 
-import { SidebarAppearance } from "@/components/Common/Appearance"
-import { Logo } from "@/components/Common/Logo"
+import { SidebarAppearance } from "@/components/Common/Appearance";
+import { Logo } from "@/components/Common/Logo";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-} from "@/components/ui/sidebar"
-import useAuth from "@/hooks/useAuth"
-import { type Item, Main } from "./Main"
-import { User } from "./User"
+} from "@/components/ui/sidebar";
+import useAuth from "@/hooks/useAuth";
+import { type Item, Main } from "./Main";
+import { User } from "./User";
 
 const baseItems: Item[] = [
-  { icon: Home, title: "Dashboard", path: "/" },
+  { icon: Home, title: "SmartLock", path: "/locks" },
   { icon: Briefcase, title: "Items", path: "/items" },
-]
+];
 
 export function AppSidebar() {
-  const { user: currentUser } = useAuth()
+  const { user: currentUser } = useAuth();
 
   const items = currentUser?.is_superuser
     ? [...baseItems, { icon: Users, title: "Admin", path: "/admin" }]
-    : baseItems
+    : baseItems;
 
   return (
     <Sidebar collapsible="icon">
@@ -37,7 +37,7 @@ export function AppSidebar() {
         <User user={currentUser} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
 
-export default AppSidebar
+export default AppSidebar;
